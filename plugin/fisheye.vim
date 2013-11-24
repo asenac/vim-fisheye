@@ -3,6 +3,8 @@ if exists('g:loaded_fisheye')
 endif
 let g:loaded_fisheye = 1
 
+" TODO default variables
+
 python << EOF
 import vim
 import os
@@ -20,7 +22,7 @@ def getCurrentFile():
     return vim.eval('expand("%:p")')
 
 def getFisheyeURL(section):
-    retrun vim.vars['fisheye_url'] + "/" + section + "/" + vim['fisheye_project']
+    return vim.vars['fisheye_url'] + "/" + section + "/" + vim.vars['fisheye_project']
 
 def openBrowser(url):
     browser = vim.vars['browser_command']
@@ -47,8 +49,7 @@ def openCommitterInBrowser():
     openBrowser("%s/%s" % (url, committer))
 EOF
 
-command! -nargs=0 FEOpenTask python openTaskInBrowser()
 command! -nargs=0 FEOpenCommit python openCommitInBrowser()
 command! -nargs=0 FEOpenCommitter python openCommitterInBrowser()
-command! -nargs=0 FEOpenFileIn python openFileInBrowser()
+command! -nargs=0 FEOpenFile python openFileInBrowser()
 
