@@ -29,14 +29,21 @@ def openBrowser(url):
     vim.command("silent !%s %s" % (browser, url))
     vim.command("redraw!")
 
-def openFileInBrowser():
+def openFileInBrowser(line = None):
+    options = [ "hb=true" ] if line else []
+    anchor = "to" + str(line) if line else ""
     url = getFisheyeURL('browse')
     dir = file = getCurrentFile()
     while dir not in ['', '/', os.environ.get('HOME')] and not isWCRoot(dir):
         dir = os.path.dirname(dir)
     if isWCRoot(dir):
         file = file.replace(dir, "")
-    openBrowser("%s%s" % (url, file))
+    url += file
+    if options:
+        url += "?" + "&".join(options)
+    if anchor:
+        url += "\#" + anchor
+    openBrowser(url)
 
 def openCommitInBrowser():
     url = getFisheyeURL('changelog')
@@ -52,4 +59,5 @@ EOF
 command! -nargs=0 FEOpenCommit python openCommitInBrowser()
 command! -nargs=0 FEOpenCommitter python openCommitterInBrowser()
 command! -nargs=0 FEOpenFile python openFileInBrowser()
+command! -nargs=0 FEOpenFileInCurrentLine python openFileInBrowser(vim.eval('line(".")'))
 
